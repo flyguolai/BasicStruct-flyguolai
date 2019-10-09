@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "module": "es6",
+    "target": "es2015",
+    "allowJs": true,
+    "lib": [
+      "es2015",
+      "es5",
+      "dom"
+    ]
+  },
+  "include": [
+    "node_modules",
+    "**/*.spec.ts"
+  ]
+}
