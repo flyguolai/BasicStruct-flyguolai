@@ -3,29 +3,27 @@ export abstract class Node {
   constructor(){}
 }
 
-
-
 export class LinkNode extends Node{
-  next: LinkNode;
+  next: this;
   constructor(){
     super();
     this.next = null;
   }
 
-  setNext(node: LinkNode){
+  setNext(node: this){
     this.next = node
   }
 }
 
 export class QueueNode extends LinkNode{
-  prev: QueueNode;
-  next: QueueNode;
+  prev: this;
+  next: this;
   constructor(){
     super();
     this.prev = null
   }
 
-  setPrev(node : QueueNode){
+  setPrev(node : this){
     this.prev = node
   }
 }

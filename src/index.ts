@@ -1,3 +1,3 @@
-// import { Queue } from "./base/Link";
+import { Queue } from "./base/Link";
 
-// let queue = new Queue()
+let queue = new Queue()

@@ -1,3 +1,5 @@
+const webpack = require("webpack")
+
 module.exports = {
   mode: 'development',
 
@@ -15,10 +17,15 @@ module.exports = {
       extensions: [".ts", ".tsx", ".js", ".json"]
   },
 
-  preprocessors: {
-    'test/*_test.js': [ 'webpack' ],
-    'test/**/*_test.js': [ 'webpack' ],
-  },
+  plugins:[
+    new webpack.LoaderOptionsPlugin({
+      options:{
+        preprocessors: {
+          'src/**/*.spec.ts': 'webpack'
+        },
+      }
+    })
+  ],
 
   module: {
       rules: [

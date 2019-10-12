@@ -9,7 +9,7 @@ export class Link {
     this.header = null
   }
 
-  appendNode(node: LinkNode) {
+  appendNode(node: LinkNode): LinkNode {
     var current = null
     // 如果头节点不存在
     if (!this.header) {
@@ -27,35 +27,46 @@ export class Link {
     }
 
     this.length++
+
+    return node
   }
 
   /**
    * 删除一个节点，如果不传值则默认删除最后一个
    * @param {Integer} index - 删除的行数
    */
-  removeNode(index: number) {
-    if (index < 0 || index > this.length + 1) {
+  removeNode(index: number):this {
+    if (index < 0 || index > (this.length - 1)) {
       console.error('越界啦')
       return
     }
 
-    const {previous,current} = this.getNodeByIndex(index)
+    const [previous,current] = this.getNodeByIndex(index)
 
-    previous.setNext(current)
+    if(index !== 0 && index !== this.length - 1){
+      previous.setNext(current.next)
+    }
+
+    if(index === 0){
+      this.header = current.next
+    }
+
+    if(index === (this.length - 1)){
+      previous.setNext(null)
+    }
 
     this.length--
 
     return this
   }
 
-  getNodeByIndex(index:number){
+  getNodeByIndex<T extends LinkNode>(index:number):[T,T]{
     let c_index = 0 // 当前索引节点index
-    let current = this.header // 当前节点
+    let current = <T>this.header // 当前节点
     let t_index = index || 0 // 目标索引
     var previous = null // 用来记录上一个节点，当当前节点删除了，将上个节点指向下个节点
     
     if (index === 0) {
-      current = this.header
       previous = current
     } else {
       while (c_index++ < t_index) {
@@ -64,7 +75,7 @@ export class Link {
       }
     }
 
-    return {previous,current}
+    return [previous,current]
   }
 
   /**
@@ -72,8 +83,8 @@ export class Link {
    * @param {Integer} index - 节点插入位置
    * @param {LinkedNode} node - 节点
    */
-  insertNode(index: number, node: LinkNode) {
-    if (index < 0 || index > this.length + 1) {
+  insertNode(index: number, node: LinkNode):this {
+    if (index < 0 || index > this.length ) {
       console.error('越界啦')
       return
     }
@@ -116,21 +127,44 @@ export class Queue extends Link {
     this.footer = node
   }
 
-  appendNode(node: QueueNode) {
+  appendNode(node: QueueNode):QueueNode {
     super.appendNode(node)
     node.setPrev(this.footer)
     this.setFooter(node)
+    return node
   }
 
   /**
    * 删除一个节点，如果不传值则默认删除最后一个
    * @param {Integer} index - 删除的行数
    */
-  removeNode(index: number) {
-    super.removeNode(index)
+  removeNode(index: number):this {
+    const [previous,current] = super.getNodeByIndex<QueueNode>(index)
+    if(index > 0 && index < (this.length - 1)){
+      previous.setNext(current.next)
+      current.next.setPrev(previous)
+    }
+
+    if(index === 0){
+      this.header = current.next
+    }
+
+    if(index === (this.length - 1)){
+      this.footer = previous
+      previous.setNext(null)
+    }
     this.header.setPrev(null)
     this.footer.setNext(null)
     return this
   }
+
+  // /**
+  //  * 插入节点位置
+  //  * @param {Integer} index - 节点插入位置
+  //  * @param {LinkedNode} node - 节点
+  //  */
+  // insertNode(index: number, node: QueueNode):LinkNode {
+  //   return this
+  // }
 
 }
