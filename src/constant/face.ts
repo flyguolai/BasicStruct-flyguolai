@@ -1,9 +1,9 @@
-import { Line } from "./line";
+import { LINE } from "./type";
 
 export class Face{
-  lines: Array<Line>;
+  lines: Array<LINE>;
 
-  constructor(){
-    this.lines = []
+  constructor(lines:Array<LINE>){
+    this.lines = lines
   }
 }

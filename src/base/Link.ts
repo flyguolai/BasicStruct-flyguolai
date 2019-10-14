@@ -47,11 +47,11 @@ export class Link {
       previous.setNext(current.next)
     }
 
-    if(index === 0){
+    if(index <= 0){
       this.header = current.next
     }
 
-    if(index === (this.length - 1)){
+    if(index >= (this.length - 1)){
       previous.setNext(null)
     }
 
@@ -84,23 +84,23 @@ export class Link {
    * @param {LinkedNode} node - 节点
    */
   insertNode(index: number, node: LinkNode):this {
-    if (index < 0 || index > this.length ) {
+    if (index < 0 || index > (this.length)) {
       console.error('越界啦')
       return
     }
 
-    let current = this.header
-    let t_index = index
-    let c_index = 0
-    let previous = null
-    if (t_index === 0) {
+    let [previous,current] = this.getNodeByIndex<LinkNode>(index)
+
+    if(index <= 0) {
+      this.header = node;
       node.setNext(current)
-      this.header = node
-    } else {
-      while (c_index++ < t_index) {
-        previous = current
-        current = current.next
-      }
+    }
+
+    if(index >=this.length){
+      previous.setNext(node)
+    }
+
+    if((index > 0) && index <= (this.length-1)){
       previous.setNext(node)
       node.setNext(current)
     }
@@ -158,13 +158,41 @@ export class Queue extends Link {
     return this
   }
 
-  // /**
-  //  * 插入节点位置
-  //  * @param {Integer} index - 节点插入位置
-  //  * @param {LinkedNode} node - 节点
-  //  */
-  // insertNode(index: number, node: QueueNode):LinkNode {
-  //   return this
-  // }
+  /**
+   * 插入节点位置
+   * @param {Integer} index - 节点插入位置
+   * @param {LinkedNode} node - 节点
+   */
+  insertNode(index: number, node: QueueNode):this {
+    if (index < 0 || index > (this.length)) {
+      console.error('越界啦')
+      return
+    }
+
+    let [previous,current] = this.getNodeByIndex<QueueNode>(index)
+
+    if(index <= 0) {
+      this.header = node;
+      node.setNext(current)
+      current.setPrev(node)
+    }
+
+    if(index >=this.length){
+      this.setFooter(node)
+      previous.setNext(node)
+      node.setPrev(previous)
+    }
+
+    if((index > 0) && index <= (this.length-1)){
+      node.setNext(current)
+      node.setPrev(previous)
+
+      previous.setNext(node)
+      current.setPrev(node)
+    }
+
+    this.length++
+    return this
+  }
 
 }

@@ -3,8 +3,6 @@ import { Queue, Link } from "./Link";
 
 describe('测试链表', () => {
 
-  
-
   it('删除中间节点',() => {
     let linkNode1 = new LinkNode();
     let linkNode2 = new LinkNode();
@@ -95,8 +93,6 @@ describe('测试链表', () => {
 
 
 describe('测试队列', () => {
-  let queue = new Queue();
-
 
   it('删除中间节点',() => {
     let linkNode1 = new QueueNode();
@@ -140,4 +136,48 @@ describe('测试队列', () => {
     expect(linkList.footer).toEqual(linkNode2)
   })
 
+  it('插入一个节点',() => {
+    let linkNode1 = new QueueNode();
+    let linkNode2 = new QueueNode();
+    let linkNode3 = new QueueNode();
+    let linkList = new Queue();
+    linkList.appendNode(linkNode1)
+    linkList.appendNode(linkNode2)
+    linkList.appendNode(linkNode3)
+    expect(linkList.length).toBe(3)
+    expect(linkList.header).toEqual(linkNode1)
+    let linkNode4 = new QueueNode()
+    linkList.insertNode(2,linkNode4)
+    expect(linkList.header.next.next).toEqual(linkNode4)
+  })
+
+  it('插入第一个节点',() => {
+    let linkNode1 = new QueueNode();
+    let linkNode2 = new QueueNode();
+    let linkNode3 = new QueueNode();
+    let linkList = new Queue();
+    linkList.appendNode(linkNode1)
+    linkList.appendNode(linkNode2)
+    linkList.appendNode(linkNode3)
+    expect(linkList.length).toBe(3)
+    expect(linkList.header).toEqual(linkNode1)
+    let linkNode4 = new QueueNode()
+    linkList.insertNode(0,linkNode4)
+    expect(linkList.header).toEqual(linkNode4)
+  })
+
+  it('最后一个节点',() => {
+    let linkNode1 = new QueueNode();
+    let linkNode2 = new QueueNode();
+    let linkNode3 = new QueueNode();
+    let linkList = new Queue();
+    linkList.appendNode(linkNode1)
+    linkList.appendNode(linkNode2)
+    linkList.appendNode(linkNode3)
+    expect(linkList.length).toBe(3)
+    expect(linkList.header).toEqual(linkNode1)
+    let linkNode4 = new QueueNode()
+    linkList.insertNode(3,linkNode4)
+    expect(linkList.footer).toEqual(linkNode4)
+  })
 })

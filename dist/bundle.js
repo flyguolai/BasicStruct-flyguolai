@@ -90,31 +90,19 @@
 /*!**************************!*\
   !*** ./src/base/Link.ts ***!
   \**************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! exports provided: Link, Queue */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var Link = /** @class */ (function () {
-    function Link() {
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Link", function() { return Link; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Queue", function() { return Queue; });
+class Link {
+    constructor() {
         this.length = 0;
         this.header = null;
     }
-    Link.prototype.appendNode = function (node) {
+    appendNode(node) {
         var current = null;
         // 如果头节点不存在
         if (!this.header) {
@@ -129,52 +117,65 @@ var Link = /** @class */ (function () {
                 current = current.next;
             }
             // 最后一个指针的下一个指针为当前node
-            current.next = node;
+            current.setNext(node);
         }
         this.length++;
-    };
+        return node;
+    }
     /**
      * 删除一个节点，如果不传值则默认删除最后一个
      * @param {Integer} index - 删除的行数
      */
-    Link.prototype.removeNode = function (index) {
-        if ((index < 0) || (index > this.length + 1)) {
+    removeNode(index) {
+        if (index < 0 || index > (this.length - 1)) {
             console.error('越界啦');
             return;
         }
-        var t_index = index || this.length; // 目标索引
-        var current = this.header; // 当前节点
-        var c_index = 0; // 当前索引节点index
+        const [previous, current] = this.getNodeByIndex(index);
+        if (index !== 0 && index !== this.length - 1) {
+            previous.setNext(current.next);
+        }
+        if (index === 0) {
+            this.header = current.next;
+        }
+        if (index === (this.length - 1)) {
+            previous.setNext(null);
+        }
+        this.length--;
+        return this;
+    }
+    getNodeByIndex(index) {
+        let c_index = 0; // 当前索引节点index
+        let current = this.header; // 当前节点
+        let t_index = index || 0; // 目标索引
         var previous = null; // 用来记录上一个节点，当当前节点删除了，将上个节点指向下个节点
         if (index === 0) {
-            current = this.header;
+            previous = current;
         }
         else {
             while (c_index++ < t_index) {
                 previous = current;
                 current = current.next;
             }
-            previous.next = current.next;
         }
-        this.length--;
-        return this;
-    };
+        return [previous, current];
+    }
     /**
      * 插入节点位置
      * @param {Integer} index - 节点插入位置
      * @param {LinkedNode} node - 节点
      */
-    Link.prototype.insertNode = function (index, node) {
-        if ((index < 0) || (index > this.length + 1)) {
+    insertNode(index, node) {
+        if (index < 0 || index > this.length) {
             console.error('越界啦');
             return;
         }
-        var current = this.header;
-        var t_index = index;
-        var c_index = 0;
-        var previous = null;
+        let current = this.header;
+        let t_index = index;
+        let c_index = 0;
+        let previous = null;
         if (t_index === 0) {
-            node.next = current;
+            node.setNext(current);
             this.header = node;
         }
         else {
@@ -182,51 +183,53 @@ var Link = /** @class */ (function () {
                 previous = current;
                 current = current.next;
             }
-            previous.next = node;
-            node.next = current;
+            previous.setNext(node);
+            node.setNext(current);
         }
         this.length++;
         return this;
-    };
-    return Link;
-}());
-exports.Link = Link;
-var Queue = /** @class */ (function (_super) {
-    __extends(Queue, _super);
-    function Queue() {
-        var _this = _super.call(this) || this;
-        _this.header = null;
-        _this.footer = null;
-        return _this;
     }
-    Queue.prototype.setHeader = function (node) {
+}
+class Queue extends Link {
+    constructor() {
+        super();
+        this.header = null;
+        this.footer = null;
+    }
+    setHeader(node) {
         this.header = node;
-    };
-    Queue.prototype.setFooter = function (node) {
+    }
+    setFooter(node) {
         this.footer = node;
-    };
-    Queue.prototype.appendNode = function (node) {
-        var current = null;
-        // 如果头节点不存在
-        if (!this.header) {
-            // 给头节点赋予初值
-            this.header = node;
+    }
+    appendNode(node) {
+        super.appendNode(node);
+        node.setPrev(this.footer);
+        this.setFooter(node);
+        return node;
+    }
+    /**
+     * 删除一个节点，如果不传值则默认删除最后一个
+     * @param {Integer} index - 删除的行数
+     */
+    removeNode(index) {
+        const [previous, current] = super.getNodeByIndex(index);
+        if (index > 0 && index < (this.length - 1)) {
+            previous.setNext(current.next);
+            current.next.setPrev(previous);
         }
-        else {
-            // 头指针为初值
-            current = this.header;
-            // 便利循环头指针，找到最后一个指针
-            while (current.next) {
-                current = current.next;
-            }
-            // 最后一个指针的下一个指针为当前node
-            current.next = node;
+        if (index === 0) {
+            this.header = current.next;
         }
-        this.length++;
-    };
-    return Queue;
-}(Link));
-exports.Queue = Queue;
+        if (index === (this.length - 1)) {
+            this.footer = previous;
+            previous.setNext(null);
+        }
+        this.header.setPrev(null);
+        this.footer.setNext(null);
+        return this;
+    }
+}
 
 
 /***/ }),
@@ -235,15 +238,14 @@ exports.Queue = Queue;
 /*!**********************!*\
   !*** ./src/index.ts ***!
   \**********************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _base_Link__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./base/Link */ "./src/base/Link.ts");
 
-Object.defineProperty(exports, "__esModule", { value: true });
-var Link_1 = __webpack_require__(/*! ./base/Link */ "./src/base/Link.ts");
-var queue = new Link_1.Queue();
-console.log(queue);
+let queue = new _base_Link__WEBPACK_IMPORTED_MODULE_0__["Queue"]();
 
 
 /***/ })
