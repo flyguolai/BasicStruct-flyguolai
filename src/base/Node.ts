@@ -1,32 +1,34 @@
 import { ENUM_RELATIVE_FACE, ENUM_FACE, LINE } from "../constant/type";
 
 export abstract class Node {
-  id:number;
-  constructor(){}
+  id: number;
+  constructor() {}
 }
 
-export class LinkNode extends Node{
+export class LinkNode extends Node {
   next: this;
-  constructor(){
+  constructor() {
     super();
     this.next = null;
   }
 
-  setNext(node: this){
-    this.next = node
+  setNext(node: this): this {
+    this.next = node;
+    return node;
   }
 }
 
-export class QueueNode extends LinkNode{
+export class QueueNode extends LinkNode {
   prev: this;
   next: this;
-  constructor(){
+  constructor() {
     super();
-    this.prev = null
+    this.prev = null;
   }
 
-  setPrev(node : this){
-    this.prev = node
+  setPrev(node: this): this {
+    this.prev = node;
+    return node;
   }
 }
 
@@ -37,25 +39,28 @@ export class HalfBox extends QueueNode {
   prevFace: ENUM_FACE;
   nextFace: ENUM_FACE;
 
-  line : LINE;
+  line: LINE;
 
-  constructor(){
+  constructor() {
     super();
   }
 
-  setPrevFace(face: ENUM_FACE){
+  setPrevFace(face: ENUM_FACE): ENUM_FACE {
     this.prevFace = face;
+    return face;
   }
 
-  setNextFace(face: ENUM_FACE){
+  setNextFace(face: ENUM_FACE): ENUM_FACE {
     this.nextFace = face;
+    return face;
   }
 
-  setLine(line: LINE){
-    this.line = line
+  setLine(line: LINE): LINE {
+    this.line = line;
+    return this.line;
   }
 
-  setRelativeFace(relativeFace: ENUM_RELATIVE_FACE){
+  setRelativeFace(relativeFace: ENUM_RELATIVE_FACE) {
     this.relativeFace = relativeFace;
   }
 }

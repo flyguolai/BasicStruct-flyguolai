@@ -1,8 +1,4 @@
-import { Node } from "../base/Node";
-
-export class Line {
-  
-}
+export class Line {}
 
 export class LineQuere {
   current: Line;

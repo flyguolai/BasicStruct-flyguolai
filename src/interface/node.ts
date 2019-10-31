@@ -1,3 +1,1 @@
-interface ILinkNode{
-
-}
+interface ILinkNode {}
